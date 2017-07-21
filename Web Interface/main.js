@@ -16,7 +16,7 @@ var labelspecs = {
 var label = document.createElement('canvas');
 label.width = labelspecs.width; label.height = labelspecs.height; label.lastText = "";
 var labelcontext = label.getContext('2d');
-labelcontext.fontSize = 150; labelcontext.textAlign = "center"; labelcontext.font = labelcontext.fontSize + "px Monospace"; labelcontext.lineSpace = 100;
+labelcontext.fontSize = 150; labelcontext.textAlign = "center"; labelcontext.font = labelcontext.fontSize + "px Monospace"; labelcontext.lineSpace = 170;
 
 window.onload = function() {
 	canvas = document.getElementById('c');
@@ -41,13 +41,13 @@ function changeText(text) {
 }
 
 function loadFile(e) {
-	if(!e.target.files) return;
-	if(e.target.files[0].size > 0x211750) {alert("Too big; max size is 2.2MB");return;}
+	if(!e.files) return;
+	if(e.files[0].size > 0x211750) {alert("Too big; max size is 2.2MB");return;}
 	var reader = new FileReader();
 	reader.onload = function(event) {
-		changeData(new Uint8Array(event.target.result), false, e.target.files[0].name);
+		changeData(new Uint8Array(event.target.result), false, e.files[0].name);
 	}
-	reader.readAsArrayBuffer(e.target.files[0]);
+	reader.readAsArrayBuffer(e.files[0]);
 }
 
 function changeData(uint8, debug, fname) {
@@ -144,6 +144,7 @@ function changeLabel(text) {
 }
 
 function loadFloppy(e) {
+	console.log(e);
 	var img = new Image();
 	var reader = new FileReader();
 	img.onload = function () {
@@ -154,7 +155,7 @@ function loadFloppy(e) {
 		img.crossOrigin="anonymous";
 		img.src = ev.target.result;
 	}
-	reader.readAsDataURL(e.target.files[0]);
+	reader.readAsDataURL(e.files[0]);
 }
 
 function readFloppy() {
