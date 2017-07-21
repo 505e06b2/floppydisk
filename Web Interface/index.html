@@ -2,10 +2,18 @@
 	<head>
 		<style>
 			canvas {
-				width:500px;
+				height:500px;
+				position:absolute;
+				right:0;
+				top: 0;
+				bottom:0;
+				margin: auto;
+				border: 3px solid #eee;
 			}
 			body {
-				background-color:red;
+				background-color: #1a1a1a;
+				color: #eee;
+				font-family: Monospace;
 			}
 		</style>
 		<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/dffa3a49/FileSaver.min.js"></script>
@@ -14,7 +22,11 @@
 		</script>
 	</head>
 	<body>
-		<div><input type="file" onchange="loadFile(event)"> Load floppy <input type="file" accept="image/x-png" onchange="loadFloppy(event)"> </div>
-		<canvas id="c"></canvas>
+		<div id="create">
+			<input type="file" onchange="loadFile(event)">
+			<textarea oninput="changeLabel(this.value)"></textarea>
+			<canvas id="c"></canvas>
+		</div>
+			 Load floppy <input type="file" accept="image/x-png" onchange="loadFloppy(event)">
 	</body>
 </html>

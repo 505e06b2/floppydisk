@@ -1,6 +1,5 @@
 var width = 0;
 var height = 0;
-var label = {};
 var img = {};
 var floppy = {};
 
@@ -14,12 +13,10 @@ var labelspecs = {
 	"y": 1016
 };
 
-var exportoptions = { //found via optipng
-	colorType:0,
-	deflateStrategy:0,
-	deflateLevel:9,
-	filterType:0
-};
+var label = document.createElement('canvas');
+label.width = labelspecs.width; label.height = labelspecs.height; label.lastText = "";
+var labelcontext = label.getContext('2d');
+labelcontext.fontSize = 150; labelcontext.textAlign = "center"; labelcontext.font = labelcontext.fontSize + "px Monospace"; labelcontext.lineSpace = 100;
 
 window.onload = function() {
 	canvas = document.getElementById('c');
@@ -34,7 +31,6 @@ window.onload = function() {
 		height = img.height;
 		
 		ctx.drawImage(img, 0, 0);
-		label = ctx.createImageData(labelspecs.width, labelspecs.height);
 	};
 	
 	img.src = 'floppy.png';
@@ -119,6 +115,7 @@ function changeData(uint8, debug, fname) {
 	for(var b = 0; b < 3; b++) floppy.data[12+(i*4)+b] = 0;
 	
 	ctx.putImageData(floppy, 0, 0);
+	changeLabel(label.lastText); //add label back on
 	if(debug) debug(f);
 }
 
@@ -129,14 +126,21 @@ function saveSpaces(space) {
 	saveAs(space, "spaces.js");
 }
 
-function changeLabel(uint8) {
-	label.data.fill(0xFF); //clear
-	for(var i = 0, e = uint8.length*4; i != e; i+=4) {
-		var index = i/4;
-		for(var b = 0; b < 3; b++) label.data[i+b] = uint8[index];
-		label.data[i+3] = 0xFF;
+function changeLabel(text) {
+	label.lastText = text;
+	
+	labelcontext.fillStyle = "white";
+	labelcontext.fillRect(0, 0, label.width, label.height);
+	if(text === undefined) return;
+	labelcontext.fillStyle = "black";
+	
+	text = text.split("\n");
+	for(var i = 0, e = text.length; i != e; i++) {//I just feel that != can be checked with less CPU cycles...
+		labelcontext.fillText(text[i],
+						  			labelspecs.width / 2,
+						  			(((labelcontext.fontSize + labelcontext.lineSpace)*(i+1) + labelspecs.height)/2  ) - ((labelcontext.fontSize + labelcontext.lineSpace)*(e))/4); //height = labelcontext.fontSize*(i+1) ; maxheight = labelspecs.height
 	}
-	ctx.putImageData(label, labelspecs.x, labelspecs.y);
+	ctx.drawImage(label, labelspecs.x, labelspecs.y);
 }
 
 function loadFloppy(e) {
@@ -180,13 +184,4 @@ function readFloppy() {
 	}
 	var dontfuckmeplz = new Uint8Array(generated);
 	saveAs( new Blob([dontfuckmeplz], {type: "application/octet-stream"}) , filename);
-}
-
-function readLabel() {
-	var read = ctx.getImageData(labelspecs.x, labelspecs.y, labelspecs.width, labelspecs.height);
-	var arr = new Uint8Array(read.data.length/4);
-	for(var i = 0, e = arr.length; i != e; i++) {
-		arr[i] = read.data[i*4];
-	}
-	saveAs( new Blob([arr], {type: "application/octet-stream"}) , "download.file");
 }
