@@ -16,7 +16,7 @@ var labelspecs = {
 var label = document.createElement('canvas');
 label.width = labelspecs.width; label.height = labelspecs.height; label.lastText = "";
 var labelcontext = label.getContext('2d');
-labelcontext.fontSize = 150; labelcontext.textAlign = "center"; labelcontext.font = labelcontext.fontSize + "px Monospace"; labelcontext.lineSpace = 170;
+labelcontext.fontSize = 150; labelcontext.textAlign = "center"; labelcontext.font = labelcontext.fontSize + "px conform,Monospace"; labelcontext.lineSpace = 170;
 
 window.onload = function() {
 	canvas = document.getElementById('c');
