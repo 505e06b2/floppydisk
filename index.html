@@ -1,0 +1,111 @@
+<html>
+	<head>
+		<style>
+			@font-face {
+    			font-family: conform;
+    			src: url(conformity.ttf);
+			}
+			canvas {
+				height:50%;
+				position:absolute;
+				right:0;
+				left:0;
+				bottom:20;
+				margin: auto;
+				border: 3px solid #eee;
+			}
+			body {
+				background-color: #1a1a1a;
+				color: #eee;
+				font-family: Monospace;
+				margin:0;
+				padding:0;
+			}
+			#create, #load {
+				position: absolute;
+				top:0;
+				left:0;
+				width:100%;
+				height:100%;
+			}
+			.inputs {
+				text-align: center;
+				position: absolute;
+				right:0;
+				left:0;
+				top:20;
+				margin: auto;
+			}
+			button {
+				margin:5;
+			}
+			textarea {
+				resize: none;
+				width:300px;
+				height:150px;
+			}
+			#tabs {width:100%;height:20}
+			#tabs div {
+				width:50%;
+				position:absolute;
+				text-align:center;
+				background: #444;
+				top:0;
+				height:20;
+			}
+			.download {
+				position:absolute;
+				height:500px;
+				width:500px;
+				right:0;
+				left:0;
+				bottom:0;
+				top:0;
+				margin: auto;
+				font:100px Monospace;
+			}
+
+		</style>
+		<script src="https://cdn.rawgit.com/eligrey/FileSaver.js/dffa3a49/FileSaver.min.js"></script>
+		<script src="spaces.js"></script>
+		<script src="main.js"></script>
+		<script>
+			function getFile(callback, accept) {
+				var input = document.createElement('input');
+				input.type = "file";
+				if(accept) input.accept = accept;
+				input.onchange = function() {callback(this)};
+				input.click();
+			}
+			function loadTab(tabname) {
+				document.getElementById("create").style.display = "none";
+				document.getElementById("load").style.display = "none";
+				document.getElementById("loadtab").style.background = "";
+				document.getElementById("createtab").style.background = "";
+				document.getElementById(tabname).style.display = "";
+				document.getElementById(tabname + "tab").style.background = "#777";
+			}
+		</script>
+	</head>
+	<body>
+		<div id="create">
+			<div class="inputs">
+				<button onclick="getFile(loadFile)">Load File</button><br>
+				<textarea oninput="changeLabel(this.value)" placeholder="Label"></textarea>
+			</div>
+			<canvas id="c"></canvas>
+		</div>
+
+		<div id="load">
+			<button class="download" onclick="getFile(loadFloppy, 'image/x-png')">Convert Floppy<br>&#x1f4be;</button><br>
+		</div>
+
+		<div id="tabs">
+			<div onclick="loadTab('create')" id="createtab">Create</div>
+			<div style="right:0" onclick="loadTab('load')" id="loadtab">Load</div>
+		</div>
+	</body>
+	<script>
+		loadTab("create");
+	</script>
+</html>
